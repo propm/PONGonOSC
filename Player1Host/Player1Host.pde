@@ -39,9 +39,19 @@ void draw(){
       drawing();
       count++;
       if(count/60 >= 2){
-        outflag = false;
-        count = 0;
-        rebirth();
+        int counter = count - 120;
+        
+        if(counter <= 40){
+          if(counter % 10 <= 0)  rebirth();
+          else{
+            x = width + r/2;
+            y = height + r/2;
+          }
+          count++;
+        }else{
+          outflag = false;
+          count = 0;
+        }
       }
     }
     
@@ -83,7 +93,10 @@ void initial(){
 void rebirth(){
   x = width/2;
   y = height/2;
-  v = new PVector(random(-3, 3), random(-3, 3));
+  
+  float vx = random(2) < 1 ? random(2)+1 : (random(2)+1)*-1;
+  float vy = random(2) < 1 ? random(2)+1 : (random(2)+1)*-1;
+  v = new PVector(vx, vy);
   v.setMag(14);
 }
 
