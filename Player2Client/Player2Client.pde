@@ -7,19 +7,20 @@ OscP5 oscC;
 NetAddress address;
 OscMessage message;
 
-float p1x, p1y, p2x, p2y;
-float ballx, bally;
-int p1point, p2point;
-boolean p1, p2;
-int r, barw, barh;
+float p1x, p1y, p2x, p2y; //バーの座標
+float ballx, bally;  //ボールの座標
+int p1point, p2point;  //プレイヤーのポイント 
+boolean p1 = false;  //勝敗判定
+boolean p2 = false;
+int r, barw, barh;   //ボールの半径，バーの長さ
 
 void setup(){
   size(900, 600);
   
-  oscC = new OscP5(this, 1234);
-  oscC.plug(this,"getData","/player2");  
-  oscH = new OscP5(this, 5678);
-  address = new NetAddress("192.168.65.1", 5678);
+  oscC = new OscP5(this, 1234); //自分のポート
+  oscC.plug(this,"getData","/player2");  //データの取得
+  oscH = new OscP5(this, 5678);  //相手のポート
+  address = new NetAddress("192.168.56.1", 5678); //相手のIPアドレスを指定
   
   r = 20;
   barw = (int)((double)width/50);
@@ -28,11 +29,14 @@ void setup(){
   p2x = width - width/6;
 }
 
-public void getData(float a,float b,float c){
-  p2y = c;
+public void getData(float a,float b,float c,int d,int e,boolean f,boolean g){
   ballx = a;
   bally = b;
-  println(a);
+  p2y = c;
+  p1point = d;
+  p2point = e;
+  p1 = f;
+  p2 = g;
   
 }
 
@@ -50,7 +54,7 @@ void draw(){
   lookPoint(p1point,0,30,30);
   lookPoint(p2point,1,width-30,30);
   
-  judge(p1point,p2point);
+  judge(p1,p2);
 }
 
 void sendFloat(float a){
@@ -69,12 +73,12 @@ void lookPoint(int point,int player, int x, int y){
   text(point, x, y);
 }
 
-void judge(int p1,int p2){
-  if(p1 == 5){
+void judge(boolean p1,boolean p2){
+  if(p1 == true){
     fill(255,0,0);
     textSize(100);
     text("Player 1 Win!!",30, height/2);
-  }else if(p2 == 5){
+  }else if(p2 == true){
     fill(0,0,255);
     textSize(100);
     text("Player 2 Win!!",30, height/2);
