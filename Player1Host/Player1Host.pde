@@ -140,7 +140,7 @@ public void receive(float y){
 void dicision(){
   //バーが画面外に行かないように
   if(myy < barh/2)           myy = barh/2;
-  if(myy > height - barh/2)  myy = width - barh/2;
+  if(myy > height - barh/2)  myy = height - barh/2;
   
   //ボールが画面外に行かないように
   if(y < r/2){
