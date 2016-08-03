@@ -3,14 +3,14 @@ import netP5.*;
 
 OscP5 oscs, oscr;
 NetAddress address;
-OscMessage mes;
+
 int r, barw, barh;
 float x, y;
 float myx, myy, youx, youy;
 PVector v;
 boolean start;
 int score1, score2;
-boolean p1, p2;        //勝ち負け
+int p1, p2;        //勝ち負け
 boolean outflag;       //ボールが外に行ったときにtrue
 int count;
 boolean end;
@@ -19,7 +19,7 @@ void setup(){
   size(900, 600);
   oscs = new OscP5(this, 1234);                    //季節を送信するインスタンス、自分のポート
   oscr = new OscP5(this, 5678);                    //受信用
-  address = new NetAddress("10.0.1.185", 1234);   //相手のIPアドレス、ポート
+  address = new NetAddress("25.19.14.76", 1234);   //相手のIPアドレス、ポート
   oscr.plug(this, "receive", "/player1");
   initial();
 }
@@ -62,11 +62,11 @@ void draw(){
     drawing();
   }else if(end){
     textSize(80);
-    if(p1){
+    if(p1 == 1){
       fill(255, 134, 0);
       text("WIN!!", width/10*4, height/8*3);
     }
-    if(p2){
+    if(p2 == 1){
       fill(120, 0, 255);
       text("LOSE...", width/10*4, height/8*3);
     }
@@ -86,7 +86,7 @@ void initial(){
   rebirth();
   
   score1 = score2 = 0;
-  p1 = p2 = false;
+  p1 = p2 = 0;
   end = false;
 }
 
@@ -122,15 +122,18 @@ void drawing(){
 }
 
 void send(){
-  mes = new OscMessage("/player2");
+  OscMessage mes = new OscMessage("/player2");
   mes.add(x);
   mes.add(y);
   mes.add(myy);
-  mes.add(score1);
-  mes.add(score2);
-  mes.add(p1);
-  mes.add(p2);
+  
+  OscMessage mes2 = new OscMessage("/judge");
+  mes2.add(score1);
+  mes2.add(score2);
+  mes2.add(p1);
+  mes2.add(p2);
   oscs.send(mes, address);
+  oscs.send(mes2, address);
 }
 
 public void receive(float y){
@@ -179,10 +182,10 @@ void dicision(){
 
 
 void judge(){
-  if(score1 >= 7)  p1 = true;
-  if(score2 >= 7)  p2 = true;
+  if(score1 >= 7)  p1 = 1;
+  if(score2 >= 7)  p2 = 1;
   
-  if(p1 || p2)  end = true;  
+  if(p1 == 1 || p2 == 1)  end = true;
 }
 
 void keyPressed(){
