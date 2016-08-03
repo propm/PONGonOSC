@@ -33,6 +33,7 @@ void draw(){
     x += v.x;
     y += v.y;
     
+    myx = mouseX;
     myy = mouseY;
     
     if(outflag){
@@ -125,7 +126,9 @@ void send(){
   OscMessage mes = new OscMessage("/player2");
   mes.add(x);
   mes.add(y);
+  mes.add(myx);
   mes.add(myy);
+  mes.add(youx);
   
   OscMessage mes2 = new OscMessage("/judge");
   mes2.add(score1);
@@ -136,7 +139,8 @@ void send(){
   oscs.send(mes2, address);
 }
 
-public void receive(float y){
+public void receive(float x, float y){
+  youx = x;
   youy = y;
 }
 
@@ -144,6 +148,12 @@ void dicision(){
   //バーが画面外に行かないように
   if(myy < barh/2)           myy = barh/2;
   if(myy > height - barh/2)  myy = height - barh/2;
+  
+  if(myx - barw/2 < width/3.0*2)  myx = width/3.0*2 + barw/2;
+  if(myx + barw/2 > width)        myx = width - barw/2;
+  
+  if(youx + barw/2 > width/3.0)  youx = width/3.0 - barw/2;
+  if(youx - barw/2 < 0)          youx = barw/2;
   
   //ボールが画面外に行かないように
   if(y < r/2){
