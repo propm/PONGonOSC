@@ -19,7 +19,7 @@ void setup(){
   size(900, 600);
   oscs = new OscP5(this, 1234);                    //季節を送信するインスタンス、自分のポート
   oscr = new OscP5(this, 5678);                    //受信用
-  address = new NetAddress("25.19.14.76", 1234);   //相手のIPアドレス、ポート
+  address = new NetAddress("localhost", 1234);   //相手のIPアドレス、ポート
   oscr.plug(this, "receive", "/player1");
   initial();
 }

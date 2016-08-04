@@ -26,14 +26,14 @@ void setup(){
   r = 20;
   barw = (int)((double)width/50);
   barh = (int)((double)height/5); 
-  p1x = width/6;
-  p2x = width - width/6;
 }
 
-public void getData(float a,float b,float c){
+public void getData(float a,float b,float c,float d, float e){
   ballx = a;
   bally = b;
-  p2y = c;
+  p2x = c;
+  p2y = d;
+  p1x = e;
  
   
 }
@@ -51,7 +51,7 @@ void draw(){
   fill(120,120,200);
   noStroke();
   p1y = mouseY;
-  sendFloat(p1y);
+  sendFloat(mouseX,p1y);
   rect(p1x - barw/2,p1y - barh/2,barw,barh);
   rect(p2x - barw/2,p2y - barh/2,barw,barh);
   
@@ -63,9 +63,10 @@ void draw(){
   judge(p1,p2);
 }
 
-void sendFloat(float a){
+void sendFloat(float a, float b){
   message = new OscMessage("/player1");
   message.add(a);
+  message.add(b);
   oscH.send(message, address);
 }
 
